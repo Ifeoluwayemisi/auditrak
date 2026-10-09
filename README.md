@@ -2,7 +2,30 @@
 
 **Money moved. AuditTrak shows the story behind it.**
 
-A local MVP for freelancers and small businesses to assemble commercial evidence, compare records with deterministic rules, and share a job with human reviewers.
+A workspace for freelancers and small businesses to bring a job’s agreement, invoice, payment, and delivery records together, see where they match, and share the evidence with a human reviewer.
+
+## The problem AuditTrak addresses
+
+For a single job, the agreement may live in a message or document, the invoice in another tool, and the payment in a bank or payment app. When the amounts, names, references, or dates do not line up, the business has to gather the records and work out what happened. Missing context can make a normal change or part payment look unclear.
+
+AuditTrak creates one record for the job, links its evidence, compares the supplied details with fixed rules, and explains matches, differences, and missing items. The business owner or reviewer decides what those findings mean.
+
+```mermaid
+flowchart LR
+  A[Agreement<br/>What was agreed?]
+  B[Invoice<br/>What was billed?]
+  C[Payment<br/>What arrived?]
+  D[Delivery<br/>What work was completed?]
+  A --> E[One job record in AuditTrak]
+  B --> E
+  C --> E
+  D --> E
+  E --> F[Compare amounts, names, dates, and references]
+  F --> G[Show matches, differences, and missing evidence]
+  G --> H[Person reviews and decides next step]
+```
+
+![AuditTrak problem and solution: job evidence is collected in one place, compared, and presented for human review](docs/problem-solution.svg)
 
 ## Run it
 
@@ -11,32 +34,12 @@ Requires Node **22.13 or newer** (uses Node SQLite). SQLite may print an experim
 ```bash
 npm ci
 npm run build
-npm run seed
 npm start
 ```
 
-Open http://localhost:3000. Sign up, or use these **local demo accounts**:
-
-| Role | Email | Password |
-| --- | --- | --- |
-| Business | demo@audittrak.local | AuditTrakDemo2026! |
-| Reviewer | reviewer@audittrak.local | ReviewAuditTrak2026! |
-
-Set `DEMO_PASSWORD` / `REVIEWER_PASSWORD` before first seeding to use your own sample passwords. Re-running the seed does not reset existing accounts. Do not deploy default demo accounts publicly. No real financial records are included.
+Open http://localhost:3000 and create a workspace. Add a job, then enter its agreement, invoice, payment, and delivery details. Attach source records when available, run the assessment, and review the reasons before sharing it.
 
 Environment settings are described in `.env.example`. Supply them through your shell/process manager; this service does **not** automatically load `.env` files.
-
-## Try the whole story
-
-1. Sign in as the business. Click **Load five fictional jobs** in an empty workspace.
-2. Open Amina: agreement, invoice, payment agree, but delivery and confirmation remain missing.
-3. Click **Check this job**. Read the reasons; this is evidence coverage, not proof of authenticity.
-4. Record completed delivery and attach a text/PDF/image as fulfillment evidence.
-5. Create a confirmation link. Open it in another tab and submit a **fictional** client response.
-6. Check the job again, then **Share for review**. Sign in as the reviewer to read it and add a note.
-7. Edit the job as its owner: sharing is revoked, old assessments become stale, and old confirmation links no longer apply.
-
-Other stories cover a changed price, part payment, a different payer, and a credit followed by a debit. Conversation illustrations are synthetic teaching examples, not screenshots from connected accounts. Marketplace-specific workflows are illustrative rather than platform documentation.
 
 ## Included
 
@@ -46,7 +49,7 @@ Other stories cover a changed price, part payment, a different payer, and a cred
 - Deterministic amounts, currencies, names, references, timing, net credits/debits, missing delivery and confirmation checks.
 - Evidence graph, timeline, activity log, commercial activity profile, explicit sharing/revocation and a reviewer workspace.
 - Optional Mono import and AI extraction provider boundaries, separate from manual records.
-- Five fictional demo stories, tests, walkthrough presentation and a separate pitch deck/script in `docs/`.
+- A walkthrough presentation, a pitch deck/script, and fictional test fixtures in `docs/` and `data/`.
 
 ## Architecture
 
