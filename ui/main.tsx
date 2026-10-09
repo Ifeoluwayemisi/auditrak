@@ -198,10 +198,15 @@ function App() {
         <Form
           title={signup ? "Create your workspace" : "Sign in"}
           submit={async (f) => {
+            if (signup && f.password !== f.confirmPassword) {
+              throw new Error("The passwords do not match.");
+            }
+            const credentials = { ...f };
+            delete credentials.confirmPassword;
             const r = await api(
               signup ? "/auth/signup" : "/auth/login",
               "POST",
-              f,
+              credentials,
             );
             setUser(r.user);
           }}
@@ -222,10 +227,20 @@ function App() {
             autoComplete={signup ? "new-password" : "current-password"}
           />
           {signup && (
-            <p className="field-hint">
-              Choose a password with at least 12 characters. Use Show to check
-              what you entered before creating your workspace.
-            </p>
+            <>
+              <Field
+                label="Confirm password"
+                name="confirmPassword"
+                type="password"
+                minLength={12}
+                required
+                autoComplete="new-password"
+              />
+              <p className="field-hint">
+                Use at least 12 characters. Re-enter the same password to
+                confirm it. Show and Hide let you check each field.
+              </p>
+            </>
           )}
         </Form>
         <Button className="quiet" onClick={() => setSignup(!signup)}>
