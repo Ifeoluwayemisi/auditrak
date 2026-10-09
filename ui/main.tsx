@@ -184,71 +184,23 @@ function App() {
     );
   if (!user)
     return (
-      <main className="login">
-        <div className="brand">◈ AUDITTRAK</div>
-        <h1>
-          Keep every job’s
-          <br />
-          records together.
-        </h1>
-        <p>
-          Organize agreements, invoices, payments, and delivery records in one
-          workspace. See what matches and what needs your attention.
-        </p>
-        <Form
-          title={signup ? "Create your workspace" : "Sign in"}
-          submit={async (f) => {
-            if (signup && f.password !== f.confirmPassword) {
-              throw new Error("The passwords do not match.");
-            }
-            const credentials = { ...f };
-            delete credentials.confirmPassword;
-            const r = await api(
-              signup ? "/auth/signup" : "/auth/login",
-              "POST",
-              credentials,
-            );
-            setUser(r.user);
-          }}
-        >
-          {signup && (
-            <>
-              <Field label="Your name" name="name" required />
-              <Field label="Business name" name="businessName" required />
-            </>
-          )}
-          <Field label="Email" name="email" type="email" required />
-          <Field
-            label="Password"
-            name="password"
-            type="password"
-            minLength={signup ? 12 : 1}
-            required
-            autoComplete={signup ? "new-password" : "current-password"}
-          />
-          {signup && (
-            <>
-              <Field
-                label="Confirm password"
-                name="confirmPassword"
-                type="password"
-                minLength={12}
-                required
-                autoComplete="new-password"
-              />
-              <p className="field-hint">
-                Use at least 12 characters. Re-enter the same password to
-                confirm it. Show and Hide let you check each field.
-              </p>
-            </>
-          )}
-        </Form>
-        <Button className="quiet" onClick={() => setSignup(!signup)}>
-          {signup
-            ? "Already registered? Sign in"
-            : "New here? Create a workspace"}
-        </Button>
-      </main>
+      <PublicExperience
+        signup={signup}
+        setSignup={setSignup}
+        submit={async (f) => {
+          if (signup && f.password !== f.confirmPassword) {
+            throw new Error("The passwords do not match.");
+          }
+          const credentials = { ...f };
+          delete credentials.confirmPassword;
+          const r = await api(
+            signup ? "/auth/signup" : "/auth/login",
+            "POST",
+            credentials,
+          );
+          setUser(r.user);
+        }}
+      />
     );
   return (
     <div className="shell">
@@ -1299,6 +1251,121 @@ function Upload({ onUpload }: { onUpload: (x: any) => Promise<any> }) {
     </>
   );
 }
+function PublicExperience({
+  signup,
+  setSignup,
+  submit,
+}: {
+  signup: boolean;
+  setSignup: (value: boolean) => void;
+  submit: (f: Record<string, string>) => Promise<any>;
+}) {
+  const [screen, setScreen] = useState<"home" | "auth">("home");
+  const begin = (createAccount = false) => {
+    setSignup(createAccount);
+    setScreen("auth");
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+  if (screen === "auth")
+    return (
+      <main className="auth-page">
+        <a className="auth-back" href="#" onClick={(e) => { e.preventDefault(); setScreen("home"); }}>
+          ← Back to AuditTrak
+        </a>
+        <div className="auth-grid">
+          <section className="auth-story">
+            <div className="brand"><span className="brand-mark">◈</span> AUDITTRAK</div>
+            <div className="auth-story-copy">
+              <span className="eyebrow light">THE STORY BEHIND THE MONEY</span>
+              <h1>Good work deserves a clear record.</h1>
+              <p>Keep the agreement, invoice, payment, and delivery details for each job together.</p>
+              <div className="story-note"><span>AGREEMENT</span><b>What we decided</b><i>→</i><span>PAYMENT</span></div>
+            </div>
+            <small className="photo-credit">A calmer way to keep business evidence in view.</small>
+          </section>
+          <section className="auth-form-wrap">
+            <div className="mobile-brand brand"><span className="brand-mark">◈</span> AUDITTRAK</div>
+            <div className="auth-form-head">
+              <span className="eyebrow">YOUR WORKSPACE</span>
+              <h2>{signup ? "Create your account" : "Welcome back"}</h2>
+              <p>{signup ? "Set up a place to keep each job’s records together." : "Sign in to continue to your workspace."}</p>
+            </div>
+            <Form title={signup ? "Create your workspace" : "Sign in"} submit={submit}>
+              {signup && <Field label="Your name" name="name" placeholder="e.g. Amina Bello" required />}
+              {signup && <Field label="Business name" name="businessName" placeholder="e.g. Amina Creative Studio" required />}
+              <Field label="Email address" name="email" type="email" placeholder="you@example.com" required autoComplete="email" />
+              <Field label="Password" name="password" type="password" placeholder={signup ? "At least 12 characters" : "Enter your password"} minLength={signup ? 12 : 1} required autoComplete={signup ? "new-password" : "current-password"} />
+              {signup && <Field label="Confirm password" name="confirmPassword" type="password" placeholder="Enter your password again" minLength={12} required autoComplete="new-password" />}
+              {signup && <p className="field-hint">Use at least 12 characters. You can show or hide either password while typing.</p>}
+            </Form>
+            <p className="auth-switch">
+              {signup ? "Already have an account?" : "New to AuditTrak?"}{" "}
+              <button type="button" onClick={() => setSignup(!signup)}>{signup ? "Sign in" : "Create an account"}</button>
+            </p>
+            <p className="auth-privacy">Your records stay in your workspace. Sharing with a reviewer requires your action.</p>
+          </section>
+        </div>
+      </main>
+    );
+
+  return (
+    <div className="public-site">
+      <header className="public-nav">
+        <a className="brand" href="#top"><span className="brand-mark">◈</span> AUDITTRAK</a>
+        <nav aria-label="Main navigation">
+          <a href="#how-it-works">How it works</a>
+          <a href="#privacy">Privacy</a>
+        </nav>
+        <div className="nav-actions">
+          <button className="nav-login" onClick={() => begin(false)}>Log in</button>
+          <button className="nav-cta" onClick={() => begin(true)}>Get started <span>↗</span></button>
+        </div>
+      </header>
+      <main id="top" className="public-main">
+        <section className="public-hero">
+          <div className="hero-copy">
+            <span className="eyebrow">A CLEARER VIEW OF EVERY JOB</span>
+            <h1>Make business activity easier to understand.</h1>
+            <p>Agreements live in chats. Invoices live somewhere else. Payments land in your bank. AuditTrak brings the records together so you can see what lines up and what needs a closer look.</p>
+            <div className="hero-actions"><button className="nav-cta" onClick={() => begin(true)}>Create your account <span>↗</span></button><a href="#how-it-works">See how it works <span>↓</span></a></div>
+            <div className="hero-caption"><span className="caption-dot" /> Built for real work, with a person always in control.</div>
+          </div>
+          <div className="hero-visual" role="img" aria-label="Illustrative workspace with a sample job record">
+            <div className="visual-tag">ONE JOB, ONE CLEAR VIEW</div>
+            <div className="visual-paper">
+              <div className="paper-top"><span>JOB RECORD</span><span className="paper-status">IN REVIEW</span></div>
+              <strong>Brand identity<br/>for Aster House</strong>
+              <div className="paper-rule" />
+              <div className="paper-row"><span>Agreement</span><b>Found</b></div>
+              <div className="paper-row"><span>Invoice</span><b>₦180,000</b></div>
+              <div className="paper-row"><span>Payment</span><b>₦180,000</b></div>
+              <div className="paper-bottom">3 records · 1 job</div>
+            </div>
+            <div className="visual-caption">A simple view of the records behind the work.</div>
+          </div>
+        </section>
+        <section className="proof-strip" aria-label="Evidence types">
+          <span>AGREEMENT</span><i>+</i><span>INVOICE</span><i>+</i><span>PAYMENT</span><i>+</i><span>DELIVERY</span><b>→</b><strong>ONE CLEAR RECORD</strong>
+        </section>
+        <section id="how-it-works" className="how-section">
+          <div className="section-intro"><span className="eyebrow">FROM TRANSACTION TO CONTEXT</span><h2>Make the pieces easier to follow.</h2><p>AuditTrak helps freelancers and small businesses organize job evidence and review it in one place.</p></div>
+          <div className="how-grid">
+            <article><span className="step-no">01</span><div className="step-icon">↗</div><h3>Bring the records together</h3><p>Add the agreement, invoice, payment, and delivery details for one piece of work.</p></article>
+            <article><span className="step-no">02</span><div className="step-icon">⌕</div><h3>See what lines up</h3><p>AuditTrak compares dates, amounts, names, and references using clear rules.</p></article>
+            <article><span className="step-no">03</span><div className="step-icon">✓</div><h3>Review the open questions</h3><p>Differences and missing details are shown for a person to check and resolve.</p></article>
+          </div>
+        </section>
+        <section className="context-section">
+          <div><span className="eyebrow light">LESS GUESSWORK</span><h2>Know what the records say—and what they don’t.</h2><p>A matching amount is a useful signal. It is not proof that every part of a job is complete. AuditTrak keeps evidence and questions visible so people can make informed reviews.</p><button className="light-cta" onClick={() => begin(true)}>Start with a job <span>↗</span></button></div>
+          <div className="context-card"><span className="context-card-kicker">ASSESSMENT SUMMARY</span><strong>Payment amount matches invoice</strong><p>Both records show ₦180,000 NGN.</p><div className="context-divider"/><span className="review-pill">CHECK DELIVERY DETAILS</span><small>Payment evidence does not confirm that the agreed work was delivered.</small></div>
+        </section>
+        <section id="privacy" className="privacy-section"><span className="privacy-symbol">◈</span><div><span className="eyebrow">YOUR EVIDENCE, YOUR CHOICE</span><h2>Sharing stays in your hands.</h2><p>Keep job records in your workspace. When you choose to share a job with a reviewer, the shared record gives them more context to understand the activity.</p></div><button className="privacy-link" onClick={() => begin(true)}>Create your workspace ↗</button></section>
+        <footer className="public-footer"><a className="brand" href="#top"><span className="brand-mark">◈</span> AUDITTRAK</a><span>The story behind the money.</span><span>People review. AuditTrak organizes the evidence.</span></footer>
+      </main>
+    </div>
+  );
+}
+
 function Confirmation({ token }: { token: string }) {
   const [value, setValue] = useState<any>(null),
     [error, setError] = useState(""),
