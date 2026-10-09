@@ -57,6 +57,8 @@ React + Vite UI → Fastify TypeScript API → SQLite database.
 
 `src/mvp/db.ts` defines the evidence model and persistence; `routes.ts` enforces ownership and reviewer access; `assessment.ts` assembles five-stage assessments using `src/reconcile.ts`. `ui/main.tsx` contains the user flow. The earlier three-record prototype remains at `/prototype`; its `/api/*` routes are learning utilities with an in-memory store, separate from the persisted `/api/v1` workspace.
 
+See [`docs/local-database.md`](docs/local-database.md) for what the local SQLite file stores, how sign-in and event records persist, and what remains before online hosting.
+
 Money is stored in integer **minor units**. Currencies are never converted or summed across currencies. Differences are review signals; they do not establish wrongdoing. A debit is subtracted only when the user links it to the job, and its relationship still needs review.
 
 ## Optional providers
