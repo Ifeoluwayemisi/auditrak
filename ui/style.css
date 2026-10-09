@@ -210,6 +210,30 @@ textarea {
   color: #192c34;
   min-width: 0;
 }
+.password-control {
+  position: relative;
+  display: block;
+}
+.password-control input {
+  padding-right: 72px;
+}
+button.password-toggle {
+  position: absolute;
+  top: 50%;
+  right: 6px;
+  transform: translateY(-50%);
+  padding: 6px 9px;
+  border-color: transparent;
+  background: transparent;
+  color: #126951;
+  font-size: 12px;
+}
+.field-hint {
+  grid-column: 1 / -1;
+  margin: -8px 0 0;
+  color: #687b80;
+  font-size: 12px;
+}
 textarea {
   min-height: 105px;
   resize: vertical;

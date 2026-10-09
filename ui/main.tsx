@@ -27,10 +27,31 @@ function Field({
   label,
   ...props
 }: React.InputHTMLAttributes<HTMLInputElement> & { label: string }) {
+  const [passwordVisible, setPasswordVisible] = useState(false);
+  const isPassword = props.type === "password";
   return (
     <label>
       {label}
-      <input {...props} />
+      {isPassword ? (
+        <span className="password-control">
+          <input
+            {...props}
+            type={passwordVisible ? "text" : "password"}
+            autoComplete={props.autoComplete}
+          />
+          <button
+            className="password-toggle"
+            type="button"
+            aria-label={passwordVisible ? "Hide password" : "Show password"}
+            aria-pressed={passwordVisible}
+            onClick={() => setPasswordVisible(!passwordVisible)}
+          >
+            {passwordVisible ? "Hide" : "Show"}
+          </button>
+        </span>
+      ) : (
+        <input {...props} />
+      )}
     </label>
   );
 }
@@ -200,6 +221,12 @@ function App() {
             required
             autoComplete={signup ? "new-password" : "current-password"}
           />
+          {signup && (
+            <p className="field-hint">
+              Choose a password with at least 12 characters. Use Show to check
+              what you entered before creating your workspace.
+            </p>
+          )}
         </Form>
         <Button className="quiet" onClick={() => setSignup(!signup)}>
           {signup
