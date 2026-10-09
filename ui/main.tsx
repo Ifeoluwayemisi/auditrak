@@ -166,13 +166,13 @@ function App() {
       <main className="login">
         <div className="brand">◈ AUDITTRAK</div>
         <h1>
-          Every payment
+          Keep every job’s
           <br />
-          has a story.
+          records together.
         </h1>
         <p>
-          Put the agreement, bill, payment, delivered work, and client
-          confirmation together. See what lines up and what needs a closer look.
+          Organize agreements, invoices, payments, and delivery records in one
+          workspace. See what matches and what needs your attention.
         </p>
         <Form
           title={signup ? "Create your workspace" : "Sign in"}
@@ -206,15 +206,6 @@ function App() {
             ? "Already registered? Sign in"
             : "New here? Create a workspace"}
         </Button>
-        <details>
-          <summary>Try the local demo</summary>
-          <p>
-            Run the seed setup first, then use demo@audittrak.local /
-            AuditTrakDemo2026! or reviewer@audittrak.local /
-            ReviewAuditTrak2026! for the review view. These are local sample
-            accounts.
-          </p>
-        </details>
       </main>
     );
   return (
@@ -269,7 +260,6 @@ function App() {
           >
             Sign out
           </Button>
-          <a href="/prototype">Earlier learning demo ↗</a>
         </div>
       </aside>
       <main>
@@ -429,39 +419,6 @@ function App() {
                   {selected.submitted ? "Revoke sharing" : "Share for review"}
                 </Button>
               </div>
-            )}
-            {selected.demoStory && (
-              <details className="card">
-                <summary>Read this fictional conversation</summary>
-                <p>
-                  <Badge>FICTIONAL DEMO</Badge> {selected.demoStory.chat.app}
-                </p>
-                <div className="conversation">
-                  {selected.demoStory.chat.messages.map((x: any, i: number) => (
-                    <p key={i}>
-                      <b>{x.speaker}</b>
-                      <br />
-                      {x.text}
-                    </p>
-                  ))}
-                </div>
-                <img
-                  style={{ width: "100%", borderRadius: 12 }}
-                  src={
-                    "/story-assets/" +
-                    selected.demoStory.customer.split(" ")[0].toLowerCase() +
-                    ".png"
-                  }
-                  alt={
-                    "Fictional conversation and evidence for " +
-                    selected.demoStory.customer
-                  }
-                />
-                <p className="muted">
-                  An illustration of the source records. This app is not
-                  connected to the named service.
-                </p>
-              </details>
             )}
             <div className="columns">
               <div>
@@ -1032,19 +989,6 @@ function App() {
                     : "What was agreed? What was billed? What arrived? Add delivery proof and ask your client to confirm."}
                 </p>
               </div>
-              {user.role === "business" && events.length === 0 && (
-                <Button
-                  disabled={busy}
-                  onClick={() =>
-                    act(
-                      () => api("/demo/seed", "POST"),
-                      "Five fictional jobs added. Open one to explore.",
-                    )
-                  }
-                >
-                  Load five fictional jobs
-                </Button>
-              )}
             </section>
             <div className="stats">
               <div>
@@ -1076,9 +1020,9 @@ function App() {
               <h2>{user.role === "reviewer" ? "Review queue" : "Your jobs"}</h2>
               {!events.length && (
                 <p className="muted">
-                  No jobs yet.{" "}
-                  {user.role === "business"
-                    ? "Create your first job below, or load the fictional examples."
+                No jobs yet.{" "}
+                {user.role === "business"
+                    ? "Create a job to organize its agreement, invoice, payment, and delivery records."
                     : "Ask the business owner to share an assessed job."}
                 </p>
               )}
@@ -1123,11 +1067,6 @@ function App() {
                 }}
               />
             )}
-            <p className="muted">
-              Demo records are fictional. WhatsApp, marketplaces, invoicing
-              tools, and bank accounts are not connected to this workspace.
-              Manual evidence works now; provider setup is separate.
-            </p>
           </>
         ) : view === "profile" ? (
           <section className="card">
